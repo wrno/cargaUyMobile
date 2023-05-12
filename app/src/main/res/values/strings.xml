@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">carga.uy</string>
     <string name="login">Iniciar sesión</string>
-    <string name="title_activity_fullscreen">FullscreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="welcome">¡Bienvenido!</string>
+    <string name="ci">Cédula de identidad:</string>
+    <string name="full_name">Nombre completo:</string>
+    <string name="email">Correo electrónico:</string>
 </resources>
