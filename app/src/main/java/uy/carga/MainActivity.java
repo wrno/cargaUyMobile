@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Browser;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,16 +42,7 @@ public class MainActivity extends AppCompatActivity {
             ).metaData.getString("api_url");
             url += "/cargauy-services/rest/mobile/login-gubuy";
 
-            /*
-            Se debe agregar el header "ngrok-skip-browser-warning"
-            con cualquier valor para evitar la página de warning de ngrok.
-             */
-            Bundle headers = new Bundle();
-            headers.putString("ngrok-skip-browser-warning", "skip");
-
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
-            intent.putExtra(Browser.EXTRA_HEADERS, headers);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
         }catch (PackageManager.NameNotFoundException e){
             Snackbar.make(
