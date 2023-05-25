@@ -14,18 +14,29 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
+    SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        session = new SessionManager(getApplicationContext());
 
-        String error = getIntent().getStringExtra("errorMessage");
-        if(error != null){
-            Snackbar.make(
-                    findViewById(R.id.button),
-                    error,
-                    BaseTransientBottomBar.LENGTH_INDEFINITE).show();
+        if(session.isLoggedIn()){ // Si el usuario ya estaba logueado:
+            Intent intent = new Intent(this, LoginSuccessActivity.class);
+
+            // No permitimos regresar.
+            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+            startActivity(intent);
+        }else{
+            String error = getIntent().getStringExtra("errorMessage");
+            if(error != null){
+                Snackbar.make(
+                        findViewById(R.id.button),
+                        error,
+                        BaseTransientBottomBar.LENGTH_INDEFINITE).show();
+            }
         }
     }
 

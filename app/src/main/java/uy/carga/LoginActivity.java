@@ -21,11 +21,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
+    SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        session = new SessionManager(getApplicationContext());
 
         Uri uri = getIntent().getData();
         String code = uri.getQueryParameter("code");
@@ -58,12 +60,14 @@ public class LoginActivity extends AppCompatActivity {
 
                                 Intent intent = new Intent(
                                         LoginActivity.this,
-                                        ResultadoActivity.class
+                                        LoginSuccessActivity.class
                                 );
 
-                                intent.putExtra("ci", ci);
-                                intent.putExtra("nombre", nombre);
-                                intent.putExtra("email", email);
+                                // No permitimos regresar.
+                                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+                                // Creamos la sesión.
+                                session.createLoginSession(nombre, ci, email);
 
                                 startActivity(intent);
                             } catch (JSONException e) {
@@ -89,8 +93,12 @@ public class LoginActivity extends AppCompatActivity {
                             if(error.getLocalizedMessage() != null){
                                 intent.putExtra("errorMessage", error.getLocalizedMessage());
                             }else{
-                                intent.putExtra("errorMessage", "Error "
-                                        + String.valueOf(error.networkResponse.statusCode));
+                                if(error.getMessage() != null){
+                                    intent.putExtra("errorMessage", error.getMessage());
+                                }else {
+                                    intent.putExtra("errorMessage", "Error "
+                                            + String.valueOf(error.networkResponse.statusCode));
+                                }
                             }
 
                             startActivity(intent);
