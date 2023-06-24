@@ -1,8 +1,23 @@
 <resources>
     <string name="app_name">carga.uy</string>
     <string name="login">Iniciar sesión</string>
+    <string name="logout">Cerrar sesión</string>
     <string name="welcome">¡Bienvenido!</string>
-    <string name="ci">Cédula de identidad:</string>
-    <string name="full_name">Nombre completo:</string>
-    <string name="email">Correo electrónico:</string>
+    <string name="viajeHoy">Viajes del día:</string>
+    <string name="viajesProximos">Próximos viajes:</string>
+    <string name="viajeFinalizado">Viajes finalizados:</string>
+    <string name="viajesCancelados">Viajes cancelados o expirados:</string>
+    <string name="viajesEnProgreso">Viajes en progreso:</string>
+    <string name="fecha">Fecha</string>
+    <string name="viaje">Viaje</string>
+    <string name="estado">Estado</string>
+    <string name="empresa_transportista">Empresa transportista</string>
+    <string name="rubro_del_cliente">Rubro del cliente</string>
+    <string name="volumen_de_carga">Volumen de carga</string>
+    <string name="vehiculo">Vehículo</string>
+    <string name="origen">Origen</string>
+    <string name="destino">Destino</string>
+    <string name="iniciar_viaje">Iniciar viaje</string>
+    <string name="BuscarOrigen">Buscar origen en el mapa</string>
+    <string name="buscar_destino_en_el_mapa">Buscar destino en el mapa</string>
 </resources>

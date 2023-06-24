@@ -8,13 +8,13 @@ import android.content.SharedPreferences;
 import java.util.HashMap;
 
 public class SessionManager {
-    SharedPreferences pref;
+    final SharedPreferences pref;
     // Editor for Shared preferences
-    SharedPreferences.Editor editor;
+    final SharedPreferences.Editor editor;
     // Context
-    Context _context;
+    final Context _context;
     // Shared pref mode
-    int PRIVATE_MODE = 0;
+    final int PRIVATE_MODE = 0;
     // Sharedpref file name
     private static final String PREF_NAME = "AndroidHivePref";
     // All Shared Preferences Keys
@@ -25,6 +25,8 @@ public class SessionManager {
     public static final String KEY_EMAIL = "email";
     // Cédula de identidad
     public static final String KEY_CI = "ci";
+    // Refresh Token para confirmar identidad del usuario
+    public static final String KEY_REFRESH_TOKEN = "refreshToken";
 
     // Constructor
     @SuppressLint("CommitPrefEdits")
@@ -37,7 +39,7 @@ public class SessionManager {
     /**
      * Create login session
      */
-    public void createLoginSession(String name, String ci, String email) {
+    public void createLoginSession(String name, String ci, String email, String refreshToken) {
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
         // Storing name in pref
@@ -46,6 +48,8 @@ public class SessionManager {
         editor.putString(KEY_CI, ci);
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
+        // Guarda Refresh Token en pref
+        editor.putString(KEY_REFRESH_TOKEN, refreshToken);
         // commit changes
         editor.commit();
     }
@@ -54,6 +58,7 @@ public class SessionManager {
      * Check login method wil check user login status If false it will redirect
      * user to login page Else won't do anything
      */
+    @SuppressWarnings("unused")
     public void checkLogin() {
         // Check login status
         if (!this.isLoggedIn()) {
@@ -74,8 +79,9 @@ public class SessionManager {
     /**
      * Get stored session data
      */
+    @SuppressWarnings("unused")
     public HashMap<String, String> getUserDetails() {
-        HashMap<String, String> user = new HashMap<String, String>();
+        HashMap<String, String> user = new HashMap<>();
         // user name
         user.put(KEY_NAME, pref.getString(KEY_NAME, null));
 
@@ -91,21 +97,24 @@ public class SessionManager {
     /**
      * Clear session details
      */
-    public void logoutUser() {
+    public void logoutUser(Context context) {
         // Clearing all data from Shared Preferences
         editor.clear();
         editor.commit();
 
-        // After logout redirect user to Loing Activity
-        Intent i = new Intent(_context, MainActivity.class);
+        // After logout redirect user to Login Activity
+        Intent i = new Intent(context, MainActivity.class);
         // Closing all the Activities
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         // Add new Flag to start new Activity
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
+        // No permitimos regresar.
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
         // Staring Login Activity
-        _context.startActivity(i);
+        context.startActivity(i);
     }
 
     /**

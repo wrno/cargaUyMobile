@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -23,19 +24,23 @@ public class MainActivity extends AppCompatActivity {
         session = new SessionManager(getApplicationContext());
 
         if(session.isLoggedIn()){ // Si el usuario ya estaba logueado:
-            Intent intent = new Intent(this, LoginSuccessActivity.class);
+            Intent intent = new Intent(getBaseContext(), InicioActivity.class);
 
             // No permitimos regresar.
-            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
             startActivity(intent);
+            this.finish();
         }else{
             String error = getIntent().getStringExtra("errorMessage");
             if(error != null){
-                Snackbar.make(
+                Snackbar sb = Snackbar.make(
                         findViewById(R.id.button),
                         error,
-                        BaseTransientBottomBar.LENGTH_INDEFINITE).show();
+                        BaseTransientBottomBar.LENGTH_INDEFINITE
+                );
+                sb.getView().getRootView().setBackgroundColor(ContextCompat.getColor(this, R.color.black));
+                sb.show();
             }
         }
     }
@@ -51,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                     this.getPackageName(),
                     PackageManager.GET_META_DATA
             ).metaData.getString("api_url");
-            url += "/cargauy-services/rest/mobile/login-gubuy";
+            url += "/cargauy-services/rest/mobile/login";
 
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
