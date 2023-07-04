@@ -125,7 +125,7 @@ public class InicioFragment extends Fragment {
                     this.requireContext().getPackageName(),
                     PackageManager.GET_META_DATA
             ).metaData.getString("api_url");
-            url += "/cargauy-services/rest/mobile/viajes/";
+            url += "/viajes/";
             url += sessionManager.getUserDetails().get(SessionManager.KEY_CI);
 
             StringRequest stringRequest = new StringRequest(url,

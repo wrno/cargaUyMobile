@@ -47,16 +47,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void iniciarSesion(View v){
         try {
-            /*
-            En Desarrollo, usar ngrok para acceder a los servicios
-            con certificado SSL confiable. La URL debe setearse
-            en AndroidManifest.xml.
-             */
             String url = this.getPackageManager().getApplicationInfo(
                     this.getPackageName(),
                     PackageManager.GET_META_DATA
             ).metaData.getString("api_url");
-            url += "/cargauy-services/rest/mobile/login";
+            url += "/login";
 
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);

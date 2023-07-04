@@ -251,7 +251,6 @@ public class ViajeActivity extends AppCompatActivity {
                     this.getPackageName(),
                     PackageManager.GET_META_DATA
             ).metaData.getString("api_url");
-            url += "/cargauy-services/rest/mobile/";
             if (viaje.getEstado().equals("SinIniciar")) {
                 url += "comenzarViaje";
             } else if (viaje.getEstado().equals("Iniciado")) {
