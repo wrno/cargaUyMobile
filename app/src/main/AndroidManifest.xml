@@ -47,7 +47,7 @@
 
         <meta-data
             android:name="api_url"
-            android:value="https://cargauy-tse.web.elasticloud.uy/cargauy-services/rest/mobile/" />
+            android:value="https://cargauy-tse.web.elasticloud.uy/cargauy-services/rest/mobile" />
     </application>
 
 </manifest>
