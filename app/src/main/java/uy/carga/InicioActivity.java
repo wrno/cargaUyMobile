@@ -30,7 +30,7 @@ public class InicioActivity extends AppCompatActivity {
         String error = getIntent().getStringExtra("errorMessage");
         if(error != null){
             Snackbar sb = Snackbar.make(
-                    myToolbar,
+                    findViewById(android.R.id.content),
                     error,
                     BaseTransientBottomBar.LENGTH_LONG
             );

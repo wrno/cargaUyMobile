@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -35,10 +34,8 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -93,25 +90,16 @@ public class ViajeActivity extends AppCompatActivity {
 
                 switch (viaje.getEstado()) {
                     case "SinIniciar":
-                        try {
-                            Date hoy = new Date();
-                            Calendar time = Calendar.getInstance();
-                            time.setTime(hoy);
-                            time.set(Calendar.HOUR, 0);
-                            time.set(Calendar.MINUTE, 0);
-                            time.set(Calendar.SECOND, 0);
-                            time.set(Calendar.MILLISECOND, 0);
-                            hoy = time.getTime();
-                            if (Objects.requireNonNull(viaje.getFormat().parse(viaje.getFecha())).compareTo(hoy) >= 0) {
-                                estado.setText("Sin iniciar");
+                        Date hoy = new Date();
+                        if (viaje.getFecha().compareTo(viaje.getFormat().format(hoy)) >= 0) {
+                            estado.setText("Sin iniciar");
+                            if (viaje.getFecha().compareTo(viaje.getFormat().format(hoy)) == 0) {
                                 btnViaje.setText("Iniciar viaje");
                                 btnViaje.setEnabled(true);
                                 btnViaje.setVisibility(View.VISIBLE);
-                            } else {
-                                estado.setText("Expirado");
                             }
-                        } catch (ParseException e) {
-                            finish();
+                        } else {
+                            estado.setText("Expirado");
                         }
                         break;
 
@@ -252,9 +240,9 @@ public class ViajeActivity extends AppCompatActivity {
                     PackageManager.GET_META_DATA
             ).metaData.getString("api_url");
             if (viaje.getEstado().equals("SinIniciar")) {
-                url += "comenzarViaje";
+                url += "/comenzarViaje";
             } else if (viaje.getEstado().equals("Iniciado")) {
-                url += "terminarViaje";
+                url += "/terminarViaje";
             } else {
                 Intent i = new Intent(this, InicioActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -267,22 +255,31 @@ public class ViajeActivity extends AppCompatActivity {
                     response -> {
                         Intent i = new Intent(this, InicioActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        i.putExtra("errorMessage", "Se inició un viaje.");
+                        if(viaje.getEstado().equals("SinIniciar")) {
+                            i.putExtra("errorMessage", "Se inició el viaje.");
+                        }else if(viaje.getEstado().equals("Iniciado")){
+                            i.putExtra("errorMessage", "Finalizó el viaje.");
+                        }
                         startActivity(i);
                         finish();
                     },
 
                     error -> {
-                        if (error.getCause() != null) {
-                            Log.e("IniciarViaje", error.getCause().getLocalizedMessage());
+                        if(error.getLocalizedMessage() != null){
                             Snackbar sb = Snackbar.make(
                                     findViewById(R.id.toolbarViaje),
                                     Objects.requireNonNull(error.getLocalizedMessage()),
                                     BaseTransientBottomBar.LENGTH_LONG
                             );
                             sb.show();
+                        }else if (error.getCause() != null) {
+                            Snackbar sb = Snackbar.make(
+                                    findViewById(R.id.toolbarViaje),
+                                    Objects.requireNonNull(error.getCause().getLocalizedMessage()),
+                                    BaseTransientBottomBar.LENGTH_LONG
+                            );
+                            sb.show();
                         } else {
-                            Log.e("IniciarViaje", String.valueOf(error.networkResponse.statusCode));
                             Snackbar sb = Snackbar.make(
                                     findViewById(R.id.toolbarViaje),
                                     String.valueOf(error.networkResponse.statusCode),
@@ -295,7 +292,7 @@ public class ViajeActivity extends AppCompatActivity {
                 @Override
                 public byte[] getBody() {
                     HashMap<String, Object> params = new HashMap<>();
-                    params.put("idViaje", viaje.getId());
+                    params.put("id", viaje.getId());
                     return new JSONObject(params).toString().getBytes();
                 }
 

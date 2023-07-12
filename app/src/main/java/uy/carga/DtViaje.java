@@ -15,8 +15,6 @@ import java.util.Objects;
 public class DtViaje {
     @Expose private final int id;
     @Expose private final String fecha;
-    @SuppressLint("SimpleDateFormat")
-    @Expose(deserialize = false) private final DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
     @Expose private final String empresa;
     @Expose private final String rubroCliente;
     @Expose private final float volumenCarga;
@@ -34,7 +32,7 @@ public class DtViaje {
         String fecha1;
         this.id = viaje.getInt("id");
         try {
-            fecha1 = this.format.format(Objects.requireNonNull((new SimpleDateFormat("yyyy-MM-dd")).parse(viaje.getString("fecha").substring(0, 10))));
+            fecha1 = getFormat().format(Objects.requireNonNull((new SimpleDateFormat("yyyy-MM-dd")).parse(viaje.getString("fecha").substring(0, 10))));
         } catch (ParseException e) {
             fecha1 = viaje.getString("fecha");
         }
@@ -104,7 +102,8 @@ public class DtViaje {
         return volumenCarga;
     }
 
+    @SuppressLint("SimpleDateFormat")
     public DateFormat getFormat() {
-        return format;
+        return new SimpleDateFormat("dd/MM/yyyy");
     }
 }

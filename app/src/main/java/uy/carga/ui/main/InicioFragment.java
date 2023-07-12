@@ -31,7 +31,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -167,16 +166,9 @@ public class InicioFragment extends Fragment {
                                 switch (dtViaje.getEstado()){
                                     case "SinIniciar":
                                         Date hoy = new Date();
-                                        Calendar time = Calendar.getInstance();
-                                        time.setTime(hoy);
-                                        time.set(Calendar.HOUR, 0);
-                                        time.set(Calendar.MINUTE, 0);
-                                        time.set(Calendar.SECOND, 0);
-                                        time.set(Calendar.MILLISECOND, 0);
-                                        hoy = time.getTime();
-                                        if (fecha.equals(hoy)){
+                                        if (dtViaje.getFecha().equals(dtViaje.getFormat().format(hoy))){
                                             viajesHoy.add(dtViaje);
-                                        }else if (fecha.compareTo(hoy) > 0){
+                                        }else if (dtViaje.getFecha().compareTo(dtViaje.getFormat().format(hoy)) > 0){
                                             viajesProximos.add(dtViaje);
                                         }else {
                                             viajesCancelados.add(dtViaje);
